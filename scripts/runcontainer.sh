@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
 # Run container from image
-IMAGE_ID="56e9b6fa7044"
+#IMAGE_ID="56e9b6fa7044"
+IMAGE_name="myros2:v1"
 PLATFORM="$(uname -m)"
 echo $PLATFORM
+
+echo "Script executed from: ${PWD}"
+BASEDIR=$(dirname $0)
+echo "Script location: ${BASEDIR}"
 
 #sudo xhost +si:localuser:root
 # Map host's display socket to docker
@@ -21,9 +26,9 @@ docker run -it --rm \
     --network host \
     ${DOCKER_ARGS[@]} \
     -v /dev/*:/dev/* \
-	-v /home/kaikai/Documents/myROS2:/myROS2 \
+	-v ${PWD}:/myROS2 \
     --runtime nvidia \
     --user="admin" \
     --workdir /myROS2 \
-    $IMAGE_ID \
+    $IMAGE_name \
     /bin/bash
