@@ -59,7 +59,10 @@ To use your new package and executable, first open a new terminal and source you
 To run the executable you created using the --node-name argument during package creation, enter the command:
 ```bash
 /myROS2$ ros2 run mycpackage mycnode
-hello world mycpackage package
+[INFO] [1665902187.007343170] [minimal_publisher]: Publishing: 'Hello, world! 0'
+[INFO] [1665902187.507230210] [minimal_publisher]: Publishing: 'Hello, world! 1'
+[INFO] [1665902188.007271423] [minimal_publisher]: Publishing: 'Hello, world! 2'
+......
 ```
 
 
@@ -78,3 +81,7 @@ docker commit -a "Kaikai Liu" -m "First ROS2-x86 container" 196073a381b4 myros2:
 Re-enter a container: use the command "docker exec -it container_id /bin/bash" to get a bash shell in the container.
 
 Stop a running container: docker stop container_id
+
+### VS Code remote debug:
+Connect to remote ssh targets, "attach" VS Code to an already running Docker container. Once attached, you can install extensions, edit, and debug like you can when you open a folder in a container
+<img width="608" alt="image" src="https://user-images.githubusercontent.com/6676586/196021984-800da6ce-ed84-44e6-a68c-2e5d221f97f0.png">
