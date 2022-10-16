@@ -1,6 +1,18 @@
 # myROS2
 
 ## ROS2 Tutorial
+Enter ROS2 container, check ROS2 packages and 
+```bash
+printenv | grep -i ROS
+  ROS_PYTHON_VERSION=3
+  PWD=/myROS2
+  ROS_ROOT=/opt/ros/humble
+  ROS_DISTRO=humble
+  
+/myROS2$ source /opt/ros/${ROS_DISTRO}/setup.bash
+/myROS2$ rosdep update
+```
+
 add submodule
 ```bash
 git submodule add -b humble https://github.com/ros2/examples src/examples
@@ -26,6 +38,7 @@ The install directory is where your workspace’s setup files are, which you can
 In the new terminal, source your main ROS 2 environment as the “underlay”, so you can build the overlay “on top of” it:
 ```bash
 source /opt/ros/humble/setup.bash
+rosdep update
 ```
 Go into the root of your workspace, source your overlay:
 ```bash
