@@ -83,5 +83,7 @@ Re-enter a container: use the command "docker exec -it container_id /bin/bash" t
 Stop a running container: docker stop container_id
 
 ### VS Code remote debug:
+Install Visual Studio Code Remote-SSH and Dev Containers extension.
+
 Connect to remote ssh targets, "attach" VS Code to an already running Docker container. Once attached, you can install extensions, edit, and debug like you can when you open a folder in a container
 <img width="608" alt="image" src="https://user-images.githubusercontent.com/6676586/196021984-800da6ce-ed84-44e6-a68c-2e5d221f97f0.png">
