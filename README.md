@@ -1,6 +1,18 @@
 # myROS2
 
 ## ROS2 Tutorial
+Enter ROS2 container, check ROS2 packages and 
+```bash
+printenv | grep -i ROS
+  ROS_PYTHON_VERSION=3
+  PWD=/myROS2
+  ROS_ROOT=/opt/ros/humble
+  ROS_DISTRO=humble
+  
+/myROS2$ source /opt/ros/${ROS_DISTRO}/setup.bash
+/myROS2$ rosdep update
+```
+
 add submodule
 ```bash
 git submodule add -b humble https://github.com/ros2/examples src/examples
@@ -26,6 +38,7 @@ The install directory is where your workspace’s setup files are, which you can
 In the new terminal, source your main ROS 2 environment as the “underlay”, so you can build the overlay “on top of” it:
 ```bash
 source /opt/ros/humble/setup.bash
+rosdep update
 ```
 Go into the root of your workspace, source your overlay:
 ```bash
@@ -46,6 +59,29 @@ CMakeLists.txt	include  package.xml  src
 ```
 package.xml file containing meta information about the package; CMakeLists.txt file that describes how to build the code within the package
 
+Add publish source code into [mycnode.cpp](src/mycnode.cpp); subscribe code into [mysubscribenode.cpp](src/mysubscribenode.cpp). Add the required packages into package.xml
+```bash
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+```
+Add the following things into CMakeLists.txt, one for publisher Node "mycnode", another for subscriber Node "listener":
+```bash
+find_package(rclcpp REQUIRED)#new add
+find_package(std_msgs REQUIRED)#new add
+add_executable(mycnode src/mycnode.cpp)#map node name to source code
+ament_target_dependencies(mycnode rclcpp std_msgs)#new add
+
+#add for subscriber node
+add_executable(listener src/mysubscribenode.cpp)
+ament_target_dependencies(listener rclcpp std_msgs)
+```
+In the "install" section of the CMakeLists.txt, add node names:
+```bash
+install(TARGETS mycnode
+  listener
+  DESTINATION lib/${PROJECT_NAME})
+```
+
 To build only the my_package package next time, you can run: 
 ```bash
 colcon build --packages-select mycpackage
@@ -64,7 +100,13 @@ To run the executable you created using the --node-name argument during package 
 [INFO] [1665902188.007271423] [minimal_publisher]: Publishing: 'Hello, world! 2'
 ......
 ```
-
+Open another terminal, open the subscriber
+```bash
+/myROS2$ ros2 run mycpackage listener
+[INFO] [1665902999.743708062] [minimal_subscriber]: I heard: 'Hello, world! 0'
+[INFO] [1665903000.243223400] [minimal_subscriber]: I heard: 'Hello, world! 1'
+[INFO] [1665903000.743567144] [minimal_subscriber]: I heard: 'Hello, world! 2'
+```
 
 ## Docker
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
