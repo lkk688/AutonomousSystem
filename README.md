@@ -1,6 +1,8 @@
 # myROS2
 
 ## ROS2 Tutorial
+[ROS2 Humble](https://docs.ros.org/en/humble/)
+
 Enter ROS2 container, check ROS2 packages and 
 ```bash
 printenv | grep -i ROS
@@ -107,6 +109,40 @@ Open another terminal, open the subscriber
 [INFO] [1665903000.243223400] [minimal_subscriber]: I heard: 'Hello, world! 1'
 [INFO] [1665903000.743567144] [minimal_subscriber]: I heard: 'Hello, world! 2'
 ```
+## Create a new Python Package
+Navigate into src folder, and run the package creation command:
+```bash
+/myROS2/src$ ros2 pkg create --build-type ament_python mypypackage
+```
+Write the source code [publisher_function.py](./src/mypypackage/mypypackage/publisher_function.py), add dependency packages into "package.xml"
+```bash
+<exec_depend>rclpy</exec_depend>
+<exec_depend>std_msgs</exec_depend>
+```
+Write the source code [subscriber_function.py](./src/mypypackage/mypypackage/subscriber_function.py)
+
+Add an entry point: open the setup.py file, add the following line within the console_scripts brackets
+```bash
+entry_points={
+        'console_scripts': [
+            'talker = mypypackage.publisher_function:main',
+            'listener = mypypackage.subscriber_function:main',
+        ],
+    },
+```
+Build and run:
+```bash
+/myROS2$ rosdep install -i --from-path src --rosdistro humble -y
+/myROS2$ colcon build --packages-select mypypackage
+/myROS2$. install/local_setup.bash
+```
+Run the talker and listener nodes:
+```bash
+/myROS2$ ros2 run mypypackage talker
+
+/myROS2$ ros2 run mypypackage listener
+```
+
 
 ## Docker
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
