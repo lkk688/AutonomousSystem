@@ -3,7 +3,12 @@
 ## ROS2 Tutorial
 [ROS2 Humble](https://docs.ros.org/en/humble/)
 
-Enter ROS2 container, check ROS2 packages and 
+Enter ROS2 container (make sure the current directory is myROS, it will be mounted to the container)
+```bash
+MyRepo/myROS2$ ./scripts/runcontainer.sh
+```
+
+Check ROS2 packages and 
 ```bash
 printenv | grep -i ROS
   ROS_PYTHON_VERSION=3
@@ -109,6 +114,12 @@ Open another terminal, open the subscriber
 [INFO] [1665903000.243223400] [minimal_subscriber]: I heard: 'Hello, world! 1'
 [INFO] [1665903000.743567144] [minimal_subscriber]: I heard: 'Hello, world! 2'
 ```
+
+Add msp folder
+```bash
+/myROS2/src/mycpackage$ mkdir msg
+```
+
 ## Create a new Python Package
 Navigate into src folder, and run the package creation command:
 ```bash
@@ -165,3 +176,6 @@ Install Visual Studio Code Remote-SSH and Dev Containers extension.
 
 Connect to remote ssh targets, "attach" VS Code to an already running Docker container. Once attached, you can install extensions, edit, and debug like you can when you open a folder in a container
 <img width="608" alt="image" src="https://user-images.githubusercontent.com/6676586/196021984-800da6ce-ed84-44e6-a68c-2e5d221f97f0.png">
+
+You can also see the remote running container in the Remote Explorer (Containers) part:
+<img width="393" alt="image" src="https://user-images.githubusercontent.com/6676586/197059167-50a791b1-f9d0-4590-b437-7591fce4ca34.png">
