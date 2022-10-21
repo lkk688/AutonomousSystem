@@ -188,6 +188,70 @@ ros2 interface show my_interfaces/msg/Sphere
 
 To access the custom msg, ref the newly created my_interfaces package in mycpackage. 
 
+## Add Parameters
+Create a new package
+```bash
+/myROS2/src$ ros2 pkg create --build-type ament_cmake cpp_parameters --dependencies rclcpp
+```
+Your terminal will return a message verifying the creation of your package cpp_parameters and all its necessary files and folders. The --dependencies argument will automatically add the necessary dependency lines to package.xml and CMakeLists.txt.
+
+Create the cpp source file: cpp_parameters_node.cpp
+
+Add following to the CMakeLists.txt
+```bash
+add_executable(minimal_param_node src/cpp_parameters_node.cpp)
+ament_target_dependencies(minimal_param_node rclcpp)
+
+install(TARGETS
+  minimal_param_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+```
+
+Build and run
+```bash
+rosdep install -i --from-path src --rosdistro humble -y
+colcon build --packages-select cpp_parameters
+. install/setup.bash
+ros2 run cpp_parameters minimal_param_node
+```
+
+Once you run the node, you can then see the type and description in another terminal
+```bash
+/myROS2$ ros2 param describe /minimal_param_node my_parameter
+Parameter name: my_parameter
+  Type: string
+  Description: This parameter is mine!
+  Constraints:
+
+admin@kaikai-i9new:/myROS2$ ros2 param list
+/minimal_param_node:
+  my_parameter
+  qos_overrides./parameter_events.publisher.depth
+  qos_overrides./parameter_events.publisher.durability
+  qos_overrides./parameter_events.publisher.history
+  qos_overrides./parameter_events.publisher.reliability
+  use_sim_time
+```
+You can also change the custom parameter:
+```bash
+myROS2$ ros2 param set /minimal_param_node my_parameter earth
+Set parameter successful
+```
+
+Create a "launch" folder and create a new file called cpp_parameters_launch.py. Add the following into CMakeLists.txt
+```bash
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+```
+
+Run the node using the launch file:
+```bash
+ros2 launch cpp_parameters cpp_parameters_launch.py
+```
+
 ## Docker
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
 
