@@ -20,13 +20,14 @@ printenv | grep -i ROS
 /myROS2$ rosdep update
 ```
 
-add submodule
+add submodules of ROS2 examples and tutorials:
 ```bash
 git submodule add -b humble https://github.com/ros2/examples src/examples
+git submodule add -b humble-devel https://github.com/ros/ros_tutorials.git src/ros_tutorials
 ```
 
 ```bash
-git submodule add -b humble-devel https://github.com/ros/ros_tutorials.git src/ros_tutorials
+/myROS2$ git submodule add -b ros2 https://github.com/ros-drivers/velodyne.git src/velodyne
 ```
 
 Resolve dependencies (under workspace folder):
