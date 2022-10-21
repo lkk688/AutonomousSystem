@@ -154,7 +154,37 @@ Run the talker and listener nodes:
 
 /myROS2$ ros2 run mypypackage listener
 ```
+## Creating custom msg and srv files
+Create a new package for the new custom msg, this package is seperate from other packages
+```bash
+/myROS2/src$ ros2 pkg create --build-type ament_cmake my_interfaces
+```
+Create folder of msg and srv, add msg files and srv files. Add "rosidl_generate_interfaces" into CmakeLists.txt
+```bash
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Num.msg"
+  "msg/Sphere.msg"
+  "srv/AddThreeInts.srv"
+  DEPENDENCIES geometry_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+)
+```
+Add the following lines to package.xml
+```bash
+  <depend>geometry_msgs</depend>
+  <build_depend>rosidl_default_generators</build_depend>
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+```
 
+Build the package, Now the interfaces will be discoverable by other ROS 2 packages.
+```bash
+colcon build --packages-select my_interfaces
+. install/setup.bash
+ros2 interface show my_interfaces/msg/Num
+ros2 interface show my_interfaces/msg/Sphere
+```
 
 ## Docker
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)

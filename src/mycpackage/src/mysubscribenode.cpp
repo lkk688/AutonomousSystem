@@ -3,6 +3,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+//new add for custom msg
+//#include "msg/num.hpp" //generated under install/mycpackage/msg/num.hpp
 
 using std::placeholders::_1;
 
@@ -14,6 +16,8 @@ public:
     {
         subscription_ = this->create_subscription<std_msgs::msg::String>(
             "topic", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1));
+        // subscription_ = this->create_subscription<msg::Num>(
+        //     "topic", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1));
     }
 
 private:
@@ -21,7 +25,13 @@ private:
     {
         RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
     }
+    // void topic_callback(const msg::Num &msg) const
+    // {
+    //     RCLCPP_INFO_STREAM(this->get_logger(), "I heard: '" << msg.num << "'");
+    // }
+
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+    //rclcpp::Subscription<msg::Num>::SharedPtr subscription_;
 };
 
 int main(int argc, char *argv[])
