@@ -6,3 +6,7 @@
 	path = src/ros_tutorials
 	url = https://github.com/ros/ros_tutorials.git
 	branch = humble-devel
+[submodule "src/velodyne"]
+	path = src/velodyne
+	url = https://github.com/ros-drivers/velodyne.git
+	branch = ros2
