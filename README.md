@@ -186,6 +186,8 @@ ros2 interface show my_interfaces/msg/Num
 ros2 interface show my_interfaces/msg/Sphere
 ```
 
+To access the custom msg, ref the newly created my_interfaces package in mycpackage. 
+
 ## Docker
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
 

@@ -10,7 +10,7 @@
 #include "std_msgs/msg/string.hpp" //includes the built-in message type you will use to publish data.
 
 //new add for custom msg
-#include "my_interfaces/msg/num.hpp" //generated under install/mycpackage/msg/num.hpp
+#include "my_interfaces/msg/num.hpp" //
 
 using namespace std::chrono_literals; // provided by the standard library
 
@@ -41,7 +41,7 @@ private:
     auto message = my_interfaces::msg::Num();
 
     //message.data = "Hello, world! " + std::to_string(count_++);
-    message.num = this->count_++
+    message.num = this->count_++;
 
     //The RCLCPP_INFO macro ensures every published message is printed 
     //RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
