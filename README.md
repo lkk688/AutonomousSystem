@@ -154,7 +154,7 @@ Run the talker and listener nodes:
 
 /myROS2$ ros2 run mypypackage listener
 ```
-## Creating custom msg and srv files
+## Creating custom msg and srv files
 Create a new package for the new custom msg, this package is seperate from other packages
 ```bash
 /myROS2/src$ ros2 pkg create --build-type ament_cmake my_interfaces
