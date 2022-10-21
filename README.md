@@ -1,7 +1,14 @@
 # myROS2
 
 ## ROS2 Tutorial
-Enter ROS2 container, check ROS2 packages and 
+[ROS2 Humble](https://docs.ros.org/en/humble/)
+
+Enter ROS2 container (make sure the current directory is myROS, it will be mounted to the container)
+```bash
+MyRepo/myROS2$ ./scripts/runcontainer.sh
+```
+
+Check ROS2 packages and 
 ```bash
 printenv | grep -i ROS
   ROS_PYTHON_VERSION=3
@@ -13,13 +20,14 @@ printenv | grep -i ROS
 /myROS2$ rosdep update
 ```
 
-add submodule
+add submodules of ROS2 examples and tutorials:
 ```bash
 git submodule add -b humble https://github.com/ros2/examples src/examples
+git submodule add -b humble-devel https://github.com/ros/ros_tutorials.git src/ros_tutorials
 ```
 
 ```bash
-git submodule add -b humble-devel https://github.com/ros/ros_tutorials.git src/ros_tutorials
+/myROS2$ git submodule add -b ros2 https://github.com/ros-drivers/velodyne.git src/velodyne
 ```
 
 Resolve dependencies (under workspace folder):
@@ -108,6 +116,46 @@ Open another terminal, open the subscriber
 [INFO] [1665903000.743567144] [minimal_subscriber]: I heard: 'Hello, world! 2'
 ```
 
+Add msp folder
+```bash
+/myROS2/src/mycpackage$ mkdir msg
+```
+
+## Create a new Python Package
+Navigate into src folder, and run the package creation command:
+```bash
+/myROS2/src$ ros2 pkg create --build-type ament_python mypypackage
+```
+Write the source code [publisher_function.py](./src/mypypackage/mypypackage/publisher_function.py), add dependency packages into "package.xml"
+```bash
+<exec_depend>rclpy</exec_depend>
+<exec_depend>std_msgs</exec_depend>
+```
+Write the source code [subscriber_function.py](./src/mypypackage/mypypackage/subscriber_function.py)
+
+Add an entry point: open the setup.py file, add the following line within the console_scripts brackets
+```bash
+entry_points={
+        'console_scripts': [
+            'talker = mypypackage.publisher_function:main',
+            'listener = mypypackage.subscriber_function:main',
+        ],
+    },
+```
+Build and run:
+```bash
+/myROS2$ rosdep install -i --from-path src --rosdistro humble -y
+/myROS2$ colcon build --packages-select mypypackage
+/myROS2$. install/local_setup.bash
+```
+Run the talker and listener nodes:
+```bash
+/myROS2$ ros2 run mypypackage talker
+
+/myROS2$ ros2 run mypypackage listener
+```
+
+
 ## Docker
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
 
@@ -129,3 +177,6 @@ Install Visual Studio Code Remote-SSH and Dev Containers extension.
 
 Connect to remote ssh targets, "attach" VS Code to an already running Docker container. Once attached, you can install extensions, edit, and debug like you can when you open a folder in a container
 <img width="608" alt="image" src="https://user-images.githubusercontent.com/6676586/196021984-800da6ce-ed84-44e6-a68c-2e5d221f97f0.png">
+
+You can also see the remote running container in the Remote Explorer (Containers) part:
+<img width="393" alt="image" src="https://user-images.githubusercontent.com/6676586/197059167-50a791b1-f9d0-4590-b437-7591fce4ca34.png">
