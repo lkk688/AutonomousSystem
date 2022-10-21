@@ -1,0 +1,37 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/myROS2/install/velodyne_pointcloud/include/**",
+        "/myROS2/install/velodyne_driver/include/**",
+        "/myROS2/install/velodyne_msgs/include/**",
+        "/myROS2/install/velodyne_laserscan/include/**",
+        "/myROS2/install/turtlesim/include/**",
+        "/myROS2/install/my_interfaces/include/**",
+        "/myROS2/install/examples_rclcpp_cbg_executor/include/**",
+        "/opt/ros/humble/install/include/**",
+        "/myROS2/src/cpp_parameters/include/**",
+        "/myROS2/src/examples/rclcpp/composition/minimal_composition/include/**",
+        "/myROS2/src/examples/rclcpp/executors/cbg_executor/include/**",
+        "/myROS2/src/examples/rclcpp/wait_set/include/**",
+        "/myROS2/src/my_interfaces/include/**",
+        "/myROS2/src/mycpackage/include/**",
+        "/myROS2/src/ros_tutorials/turtlesim/include/**",
+        "/myROS2/src/velodyne/velodyne_driver/include/**",
+        "/myROS2/src/velodyne/velodyne_laserscan/include/**",
+        "/myROS2/src/velodyne/velodyne_pointcloud/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
