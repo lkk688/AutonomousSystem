@@ -277,8 +277,8 @@ Connect to remote ssh targets, "attach" VS Code to an already running Docker con
 You can also see the remote running container in the Remote Explorer (Containers) part:
 <img width="393" alt="image" src="https://user-images.githubusercontent.com/6676586/197059167-50a791b1-f9d0-4590-b437-7591fce4ca34.png">
 
-Install extension of Robot Operating System (ROS) with Visual Studio Code, [github](https://github.com/ms-iot/vscode-ros)
+Install extension of Robot Operating System (ROS) with Visual Studio Code, [github](https://github.com/ms-iot/vscode-ros):
 <img width="350" alt="image" src="https://user-images.githubusercontent.com/6676586/197295344-ddf86ebb-362b-413c-aaec-74bb6d84fc83.png">
 
-Use VSCode command to run a ros node
+Use VSCode command to run a ros node:
 <img width="429" alt="image" src="https://user-images.githubusercontent.com/6676586/197295957-28a05c92-7f37-45b8-856d-67451a3ee9bf.png">
