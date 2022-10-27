@@ -26,5 +26,33 @@
         "/myROS2/build/examples_rclpy_executors",
         "/myROS2/install/examples_rclpy_executors/lib/python3.8/site-packages",
         "/opt/ros/humble/install/lib/python3.8/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/myROS2/install/velodyne_msgs/lib/python3.8/site-packages",
+        "/myROS2/install/turtlesim/lib/python3.8/site-packages",
+        "/myROS2/build/mypypackage",
+        "/myROS2/install/mypypackage/lib/python3.8/site-packages",
+        "/myROS2/install/my_interfaces/lib/python3.8/site-packages",
+        "/myROS2/build/launch_testing_examples",
+        "/myROS2/install/launch_testing_examples/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_pointcloud_publisher",
+        "/myROS2/install/examples_rclpy_pointcloud_publisher/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_minimal_subscriber",
+        "/myROS2/install/examples_rclpy_minimal_subscriber/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_minimal_service",
+        "/myROS2/install/examples_rclpy_minimal_service/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_minimal_publisher",
+        "/myROS2/install/examples_rclpy_minimal_publisher/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_minimal_client",
+        "/myROS2/install/examples_rclpy_minimal_client/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_minimal_action_server",
+        "/myROS2/install/examples_rclpy_minimal_action_server/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_minimal_action_client",
+        "/myROS2/install/examples_rclpy_minimal_action_client/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_guard_conditions",
+        "/myROS2/install/examples_rclpy_guard_conditions/lib/python3.8/site-packages",
+        "/myROS2/build/examples_rclpy_executors",
+        "/myROS2/install/examples_rclpy_executors/lib/python3.8/site-packages",
+        "/opt/ros/humble/install/lib/python3.8/site-packages"
     ]
 }
