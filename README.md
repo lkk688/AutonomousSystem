@@ -43,7 +43,7 @@ Enter ROS2 container (make sure the current directory is myROS, it will be mount
 ```bash
 MyRepo/myROS2$ ./scripts/runcontainer.sh
 ```
-
+### Test Installation
 Check ROS2 packages and source your setup file:
 ```bash
 printenv | grep -i ROS
