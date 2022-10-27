@@ -8,7 +8,7 @@ Enter ROS2 container (make sure the current directory is myROS, it will be mount
 MyRepo/myROS2$ ./scripts/runcontainer.sh
 ```
 
-Check ROS2 packages and 
+Check ROS2 packages and source your setup file:
 ```bash
 printenv | grep -i ROS
   ROS_PYTHON_VERSION=3
@@ -18,6 +18,20 @@ printenv | grep -i ROS
   
 /myROS2$ source /opt/ros/${ROS_DISTRO}/setup.bash
 /myROS2$ rosdep update
+```
+You can automatically trigger this step every time you launch a new shell:
+```bash
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+You can run some buildin samples to check the ROS installation
+```bash
+terminal1$ ros2 run demo_nodes_cpp talker
+terminal2$ ros2 run demo_nodes_py listener
+
+terminal1$ ros2 multicast receive
+terminal2$ ros2 multicast send
 ```
 
 add submodules of ROS2 examples and tutorials:
