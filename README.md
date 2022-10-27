@@ -1,7 +1,43 @@
 # myROS2
 
-## ROS2 Tutorial
-[ROS2 Humble](https://docs.ros.org/en/humble/)
+## ROS2 Installation
+Follow [ROS2 Humble](https://docs.ros.org/en/humble/) instruction to install ROS2 humble to Ubuntu22.04 (not Ubuntu20.04 or other versions)
+
+### Local Installation
+Run "locale" in a terminal window to view your currently installed locale – if UTF-8 appears in the listed output, you’re all set!
+
+For the purposes of installing ROS, we need to enable the Ubuntu Universe repository (community-maintained open source software) in addition to the Main (Canonical-supported open-source software) repository:
+```bash
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+```
+Now you can add the ROS 2 repository to your system. Authorize the public GPG (GNU Privacy Guard) key provided by ROS, then add the ROS 2 repository to your sources list:
+```bash
+$ sudo apt update && sudo apt install curl gnupg lsb-release
+$ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+$ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+```
+
+Install your ROS 2 Humble desktop setup
+```bash
+sudo apt update
+sudo apt install ros-humble-desktop
+sudo apt install python3-rosdep2 #add rosdep
+sudo apt install python3-colcon-common-extensions #add colcon
+```
+If your face "EasyInstallDeprecationWarning: easy_install" warning after colcon build, you can downgrade the setuptools
+```bash
+pip3 install setuptools==58.2.0
+```
+
+
+### Container Installation
+Check the Docker section for detailed information.
+
+Use the Dockerfile under scripts folder to build the container image:
+```bash
+myROS2/docker$ docker build .
+```
 
 Enter ROS2 container (make sure the current directory is myROS, it will be mounted to the container)
 ```bash
@@ -34,6 +70,15 @@ terminal1$ ros2 multicast receive
 terminal2$ ros2 multicast send
 ```
 
+Clone this repo:
+```bash
+git clone --recurse-submodules https://github.com/lkk688/myROS2.git
+cd myROS2
+rosdep install -i --from-path src --rosdistro humble -y
+colcon build --symlink-install
+```
+
+## Repo Setup
 add submodules of ROS2 examples and tutorials:
 ```bash
 git submodule add -b humble https://github.com/ros2/examples src/examples
@@ -267,6 +312,9 @@ ros2 launch cpp_parameters cpp_parameters_launch.py
 ```
 
 ## Docker
+Setup Docker and nvidia container runtime via [nvidiacontainer1](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) [nvidiacontainer2](https://docs.nvidia.com/dgx/nvidia-container-runtime-upgrade/index.html
+)
+
 Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
 
 Start the container with ROS2 via runcontainer.sh, change the script file if you want to change the path of mounted folders. 
