@@ -213,6 +213,20 @@ Run the talker and listener nodes:
 
 /myROS2$ ros2 run mypypackage listener
 ```
+
+Create a launch file under launch folder and start two nodes:
+```bash
+myROS2$ ros2 launch mypypackage mypypackage_launch.py
+[INFO] [launch]: All log files can be found below /home/lkk68/.ros/log/2022-10-28-00-12-03-078158-newalienware-15144
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [talker-1]: process started with pid [15175]
+[INFO] [listener-2]: process started with pid [15177]
+[talker-1] [INFO] [1666941127.499735742] [talker]: Publishing: "Hello World: 0"
+[listener-2] [INFO] [1666941127.500181698] [listener]: I heard: "Hello World: 0"
+[listener-2] [INFO] [1666941127.965901235] [listener]: I heard: "Hello World: 1"
+[talker-1] [INFO] [1666941127.966705914] [talker]: Publishing: "Hello World: 1"
+```
+
 ## Creating custom msg and srv files
 Create a new package for the new custom msg, this package is seperate from other packages
 ```bash
