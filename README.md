@@ -1,9 +1,9 @@
 # myROS2
 
 ## ROS2 Installation
-Follow [ROS2 Humble](https://docs.ros.org/en/humble/) instruction to install ROS2 humble to Ubuntu22.04 (not Ubuntu20.04 or other versions)
+Follow [ROS2 Humble](https://docs.ros.org/en/humble/) instruction to install ROS2 humble to Ubuntu22.04 (not Ubuntu20.04 or other versions).
 
-### Local Installation
+### Local Installation (tested on Ubuntu22.04 and Windows WSL2 Ubuntu22.04)
 Run "locale" in a terminal window to view your currently installed locale – if UTF-8 appears in the listed output, you’re all set!
 
 For the purposes of installing ROS, we need to enable the Ubuntu Universe repository (community-maintained open source software) in addition to the Main (Canonical-supported open-source software) repository:
@@ -344,19 +344,62 @@ Re-enter a container: use the command "docker exec -it container_id /bin/bash" t
 
 Stop a running container: docker stop container_id
 
-### VS Code remote debug:
+## VS Code Remote
 Install Visual Studio Code Remote-SSH and Dev Containers extension.
 
-Connect to remote ssh targets, "attach" VS Code to an already running Docker container. Once attached, you can install extensions, edit, and debug like you can when you open a folder in a container
+### Option1: Connect to remote ssh targets, "attach" VS Code to an already running Docker container. 
+Once attached, you can install extensions, edit, and debug like you can when you open a folder in a container
 <img width="608" alt="image" src="https://user-images.githubusercontent.com/6676586/196021984-800da6ce-ed84-44e6-a68c-2e5d221f97f0.png">
 
 You can also see the remote running container in the Remote Explorer (Containers) part:
 <img width="393" alt="image" src="https://user-images.githubusercontent.com/6676586/197059167-50a791b1-f9d0-4590-b437-7591fce4ca34.png">
 
+### Option2: Set up the development container in VSCode.
+Create a .devcontainer folder under workspace for VSCode to know how to mount your docker container as a workspace. You can click "Dev Containers: Add Dev Container Configuration Files" in command to create such folder. The "devcontainer.json" contains the container options including the Dockerfile and runArgs. With this .devcontainer folder, you can open a new container for development by selecting "Dev Containers: Reopen in Container" -- tested working. Check [VScode Container](https://code.visualstudio.com/docs/devcontainers/containers) for detailed information.
+
+### Windows WSL2
+You can use the VS Code Remote extension open the workspace in windows WSL2 (install the ROS2 on Ubuntu22.04), you can see the status bar in the bottom-left corner of VS Code:
+<img width="201" alt="image" src="https://user-images.githubusercontent.com/6676586/198738636-2725a72c-214a-451b-bc4a-f8d1884db977.png">
+
+
+## VS Code ROS Extension
 Install extension of Robot Operating System (ROS) with Visual Studio Code, [github](https://github.com/ms-iot/vscode-ros):
 
 <img width="350" alt="image" src="https://user-images.githubusercontent.com/6676586/197295344-ddf86ebb-362b-413c-aaec-74bb6d84fc83.png">
 
-Use VSCode command to run a ros node:
+Use VSCode command to run a ros node or launch file:
 
 <img width="429" alt="image" src="https://user-images.githubusercontent.com/6676586/197295957-28a05c92-7f37-45b8-856d-67451a3ee9bf.png">
+
+In the VSCode terminal, open ROS2 daemon:
+```bash
+ros2 daemon start
+ros2 daemon status
+```
+After ROS2 daemon is started, you can see the status information in the bottom-left corner of VSCode changed from "x" to
+<img width="125" alt="image" src="https://user-images.githubusercontent.com/6676586/198738681-b922bb56-5419-45f3-b990-c7b287a607b0.png">
+
+### Python ROS debug
+In settings.json under .vscode folder, add the python path of ROS:
+```bash
+"/opt/ros/humble/lib/python3.10/site-packages",
+"/opt/ros/humble/include/**",
+```
+
+To enable Python debug, click the Debug icon of VScode, select to create a new "launch.json" (make sure no other python windows is open) based on ROS->launch. After you created the launch.json, you can change the python launch file path in the "target" field in order to do the step by step debug --tested working.
+
+### C++ ROS debug
+To enable C++ ROS debug, we need to setup c_cpp_properties.json file (can be created by VSCode ROS extension) first. Add the include path of ROS2 humble.
+
+Make sure the gdb is installed in the container/WSL2 or local system:
+```bash
+sudo apt-get install libc6-dbg gdb valgrind
+```
+
+Compile the ROS2 package with debug options
+```bash
+colcon build --packages-select cpp_parameters --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
+```
+Add the C++ ROS2 launch file to the "target" field of "launch.json" (or create a new launch.json, select C++ launch file), then you can click the debug button to start step-by-step debug:
+<img width="1718" alt="image" src="https://user-images.githubusercontent.com/6676586/198739861-0f02b139-ff89-4dc6-a5a1-697e9f287005.png">
+
