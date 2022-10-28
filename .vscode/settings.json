@@ -1,5 +1,7 @@
 {
     "python.autoComplete.extraPaths": [
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/include/**",
         "/myROS2/install/velodyne_msgs/lib/python3.8/site-packages",
         "/myROS2/install/turtlesim/lib/python3.8/site-packages",
         "/myROS2/build/mypypackage",
@@ -28,6 +30,8 @@
         "/opt/ros/humble/install/lib/python3.8/site-packages"
     ],
     "python.analysis.extraPaths": [
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/include/**",
         "/myROS2/install/velodyne_msgs/lib/python3.8/site-packages",
         "/myROS2/install/turtlesim/lib/python3.8/site-packages",
         "/myROS2/build/mypypackage",
@@ -54,5 +58,6 @@
         "/myROS2/build/examples_rclpy_executors",
         "/myROS2/install/examples_rclpy_executors/lib/python3.8/site-packages",
         "/opt/ros/humble/install/lib/python3.8/site-packages"
-    ]
+    ],
+    "ros.distro": "humble"
 }

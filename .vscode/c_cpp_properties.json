@@ -6,6 +6,9 @@
         "limitSymbolsToIncludedHeaders": false
       },
       "includePath": [
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/install/include/**",
+        "/opt/ros/humble/include/**",
         "/myROS2/install/velodyne_pointcloud/include/**",
         "/myROS2/install/velodyne_driver/include/**",
         "/myROS2/install/velodyne_msgs/include/**",
@@ -13,7 +16,6 @@
         "/myROS2/install/turtlesim/include/**",
         "/myROS2/install/my_interfaces/include/**",
         "/myROS2/install/examples_rclcpp_cbg_executor/include/**",
-        "/opt/ros/humble/install/include/**",
         "/myROS2/src/cpp_parameters/include/**",
         "/myROS2/src/examples/rclcpp/composition/minimal_composition/include/**",
         "/myROS2/src/examples/rclcpp/executors/cbg_executor/include/**",
