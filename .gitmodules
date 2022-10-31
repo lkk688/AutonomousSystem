@@ -10,3 +10,7 @@
 	path = src/velodyne
 	url = https://github.com/ros-drivers/velodyne.git
 	branch = ros2
+[submodule "src/perception_pcl"]
+	path = src/perception_pcl
+	url = https://github.com/ros-perception/perception_pcl.git
+	branch = ros2
