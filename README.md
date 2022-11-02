@@ -331,17 +331,22 @@ Install [Docker](https://docs.docker.com/engine/install/ubuntu/) and follow [Pos
 Setup Docker and nvidia container runtime via [nvidiacontainer1](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) [nvidiacontainer2](https://docs.nvidia.com/dgx/nvidia-container-runtime-upgrade/index.html
 )
 
-Build the container via [mybuildros2.sh](\scripts\mybuildros2.sh)
+After you build the container, you can check the new container via "docker images", note down the image id, and run this image:
+```bash
+sudo docker run -it --rm 486a56765aad
+```
+After you entered the container and did changes inside the container, click "control+P+Q" to exit the container without terminate the container. Use "docker ps" to check the container id, then use "docker commit" to commit changes:
+```bash
+docker commit -a "Kaikai Liu" -m "First ROS2-x86 container" 196073a381b4 myros2:v1
+```
+Now, you can see your newly created container image named "myros2:v1" in "docker images".
 
-Start the container with ROS2 via runcontainer.sh, change the script file if you want to change the path of mounted folders. 
+You can now start your ROS2 container (i.e., myros2:v1) via runcontainer.sh, change the script file if you want to change the path of mounted folders. 
 ```bash
 sudo xhost +si:localuser:root
 ./scripts/runcontainer.sh
 ```
-after you did changes inside the container, click "control+P+Q" to exit the container without terminate the container. Use "docker ps" to check the container id, then use "docker commit" to commit changes:
-```bash
-docker commit -a "Kaikai Liu" -m "First ROS2-x86 container" 196073a381b4 myros2:v1
-```
+after you 
 Re-enter a container: use the command "docker exec -it container_id /bin/bash" to get a bash shell in the container.
 
 Stop a running container: docker stop container_id
