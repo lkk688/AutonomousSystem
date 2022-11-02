@@ -14,3 +14,6 @@
 	path = src/perception_pcl
 	url = https://github.com/ros-perception/perception_pcl.git
 	branch = ros2
+[submodule "src/pylon_ros2_camera"]
+	path = src/pylon_ros2_camera
+	url = https://github.com/basler/pylon-ros-camera
