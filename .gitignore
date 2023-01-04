@@ -53,3 +53,6 @@ CATKIN_IGNORE
 install/
 log/
 *.deb
+
+/src/pylon_ros2_camera
+/src/isaac_ros_common
