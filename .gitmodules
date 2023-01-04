@@ -17,3 +17,15 @@
 [submodule "src/pylon_ros2_camera"]
 	path = src/pylon_ros2_camera
 	url = https://github.com/basler/pylon-ros-camera
+[submodule "src/isaac_ros_common"]
+	path = src/isaac_ros_common
+	url = https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common
+	branch = main
+[submodule "src/isaac_ros_nitros"]
+	path = src/isaac_ros_nitros
+	url = https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nitros
+	branch = main
+[submodule "src/isaac_ros_dnn_inference"]
+	path = src/isaac_ros_dnn_inference
+	url = https://github.com/lkk688/isaac_ros_dnn_inference.git
+	branch = main
