@@ -370,6 +370,18 @@ ros2 service list -t | grep encoding
 ros2 service call /my_camera/pylon_ros2_camera_node/set_image_encoding pylon_ros2_camera_interfaces/srv/SetStringValue "value: mono8"
 ```
 
+## Add NVIDIA ISAAC ROS
+Add the following NVIDIA ISAAC ROS packages into the src folder
+```bash
+git submodule add -b main https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common src/isaac_ros_common
+git submodule add -b main https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nitros src/isaac_ros_nitros
+git submodule add -b main https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_object_detection src/isaac_ros_object_detection
+git submodule add -b main https://github.com/lkk688/isaac_ros_dnn_inference.git src/isaac_ros_dnn_inference
+
+colcon build --symlink-install
+. install/local_setup.bash
+ros2 launch isaac_ros_triton isaac_ros_triton.launch.py model_name:=peoplesemsegnet_shuffleseg model_repository_paths:=['/tmp/models'] input_binding_names:=['input_2:0'] output_binding_names:=['argmax_1']
+```
 
 ## Docker
 Install [Docker](https://docs.docker.com/engine/install/ubuntu/) and follow [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
