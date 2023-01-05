@@ -335,7 +335,9 @@ sudo dpkg -i pylon_7.2.0.25592-deb0_amd64.deb
 export PYLON_ROOT=/opt/pylon
 echo "export PYLON_ROOT=/opt/pylon" >> ~/.bashrc
 ```
-Add the Pylon ROS2 package and the subpackage "image_common"
+The Pylon viewer and other tools are available under "/opt/pylon/bin/".
+
+Add the [Pylon ROS2 package](https://github.com/basler/pylon-ros-camera/tree/humble) and the subpackage "image_common"
 ```bash
 /myROS2$ git submodule add https://github.com/basler/pylon-ros-camera pylon_ros2_camera src/pylon_ros2_camera
 /myROS2/src/pylon_ros2_camera$ git submodule add -b galactic -f https://github.com/ros-perception/image_common.git
@@ -347,7 +349,9 @@ Build the ROS2 package, and run the ROS2 pylon node
 /myROS2$ . install/local_setup.bash
 /myROS2$ ros2 launch pylon_ros2_camera_wrapper pylon_ros2_camera.launch.py
 ```
-This automatically uses the first camera model that is found by underlaying pylon API. To merely view the images you can use the ROS 2 compatible version of the image_view node of the image_pipeline node stack. This node subscribes to the provided raw image topics. If more extended functionalities of image display and manipulation is needed, we can start with the GUI -based rqt framework (type "rqt" in commandline), open the Plugins -> Visualization menu and select Image View, apply "/my_camera/pylon_ros2_camera_node/image_raw" as the topic.
+This automatically uses the first camera model that is found by underlaying pylon API. Several parameters can be set through the launch file and the user parameter file loaded through it (the pylon_ros2_camera_wrapper/config/default.yaml user parameter file is loaded by default). Acquisition from a specific camera is possible by setting the device_user_id parameter. Acquisition images are published through the [Camera name]/[Node name]/[image_raw] topic, only if a subscriber to this topic has been registered.
+
+To merely view the images you can use the ROS 2 compatible version of the image_view node of the image_pipeline node stack. This node subscribes to the provided raw image topics. If more extended functionalities of image display and manipulation is needed, we can start with the GUI -based rqt framework (type "rqt" in commandline), open the Plugins -> Visualization menu and select Image View, apply "/my_camera/pylon_ros2_camera_node/image_raw" as the topic.
 
 To control the camera, we can see the list of parameter settings. The execution is realized by "ros2 service call <service> <interface> <arguments>"
 ```bash
