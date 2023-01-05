@@ -325,6 +325,48 @@ Run the node using the launch file:
 ros2 launch cpp_parameters cpp_parameters_launch.py
 ```
 
+## Add Pylon GigE Camera
+Based on GigE camera device: [Basler Pylon GigE camera](https://www.baslerweb.com/en/products/cameras/area-scan-cameras/ace/aca1600-20gc/), follow the [document](https://www.baslerweb.com/en/downloads/document-downloads/interfacing-basler-cameras-with-ros-2/) to install ROS2 driver. 
+
+Download the [Basler pylon Camera Software Suite](https://docs.baslerweb.com/pylon-camera-software-suite), and install the driver (if using docker, install it in the container):
+```bash
+tar -zxvf pylon_7.2.0.25592_x86_64_debs.tar.gz
+sudo dpkg -i pylon_7.2.0.25592-deb0_amd64.deb
+export PYLON_ROOT=/opt/pylon
+echo "export PYLON_ROOT=/opt/pylon" >> ~/.bashrc
+```
+Add the Pylon ROS2 package and the subpackage "image_common"
+```bash
+/myROS2$ git submodule add https://github.com/basler/pylon-ros-camera pylon_ros2_camera src/pylon_ros2_camera
+/myROS2/src/pylon_ros2_camera$ git submodule add -b galactic -f https://github.com/ros-perception/image_common.git
+```
+Build the ROS2 package, and run the ROS2 pylon node
+```bash
+/myROS2$ sudo rosdep install --from- paths src --ignore-src –r -y
+/myROS2$ colcon build --symlink-install
+/myROS2$ . install/local_setup.bash
+/myROS2$ ros2 launch pylon_ros2_camera_wrapper pylon_ros2_camera.launch.py
+```
+This automatically uses the first camera model that is found by underlaying pylon API. To merely view the images you can use the ROS 2 compatible version of the image_view node of the image_pipeline node stack. This node subscribes to the provided raw image topics. If more extended functionalities of image display and manipulation is needed, we can start with the GUI -based rqt framework (type "rqt" in commandline), open the Plugins -> Visualization menu and select Image View, apply "/my_camera/pylon_ros2_camera_node/image_raw" as the topic.
+
+To control the camera, we can see the list of parameter settings. The execution is realized by "ros2 service call <service> <interface> <arguments>"
+```bash
+ros2 service list
+ros2 service type /my_camera/pylon_ros2_camera_node/set_exposure
+ros2 interface show pylon_ros2_camera_interfaces/srv/SetExposure
+
+ros2 service list -t | grep exposure
+ros2 service call /my_camera/pylon_ros2_camera_node/set_exposure pylon_ros2_camera_interfaces/srv/SetExposure "target_exposure: 6666"
+  
+ros2 service list -t | grep roi
+ros2 interface show pylon_ros2_camera_interfaces/srv/SetROI
+ros2 service call /my_camera/pylon_ros2_camera_node/set_roi pylon_ros2_camera_interfaces/srv/SetROI "target_roi: {x_offset: 0,y_offset: 0,height: 480,width: 640,do_rectify: false}"
+  
+ros2 service list -t | grep encoding
+ros2 service call /my_camera/pylon_ros2_camera_node/set_image_encoding pylon_ros2_camera_interfaces/srv/SetStringValue "value: mono8"
+```
+
+
 ## Docker
 Install [Docker](https://docs.docker.com/engine/install/ubuntu/) and follow [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
 
