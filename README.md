@@ -408,6 +408,7 @@ after you
 Re-enter a container: use the command "docker exec -it container_id /bin/bash" to get a bash shell in the container.
 
 Stop a running container: docker stop container_id
+Stop all containers not running: docker container prune
 
 ## VS Code Remote
 Install Visual Studio Code Remote-SSH and Dev Containers extension.

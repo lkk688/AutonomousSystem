@@ -1,0 +1,67 @@
+ARG BASE_IMAGE=myros2ubuntu22cuda117:latest
+FROM ${BASE_IMAGE}
+
+ARG UBUNTU_RELEASE_YEAR
+# ARG ZED_SDK_MAJOR
+# ARG ZED_SDK_MINOR
+ARG CUDA_MAJOR
+ARG CUDA_MINOR
+
+ARG ROS_DISTRO_ARG
+ENV LOGNAME root
+ENV ROS_DISTRO ${ROS_DISTRO_ARG}
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# install packages
+# Install necessary software for the installation of ROS2
+RUN apt-get update && apt-get install -y \ 
+                      locales \
+                      curl \
+                      gnupg2 \
+                      lsb-release \
+                      software-properties-common \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*rm 
+
+# Setup of the locale
+RUN locale-gen en_US en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+    && export LANG=en_US.UTF-8
+
+RUN add-apt-repository universe
+
+RUN apt update && sudo apt install curl
+
+# Add key
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+RUN sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null' \
+    && apt update
+
+# Specify the distribution of ROS2
+ENV ROS_DISTRO ${ROS_DISTRO_ARG}
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install ROS2
+RUN apt install -y ros-${ROS_DISTRO_ARG}-desktop \
+                python3-colcon-common-extensions \
+                python3-rosdep2 \
+                python3-argcomplete \
+    && rm -rf /var/lib/apt/lists/*rm 
+
+RUN apt install python3-rosdep2 #add rosdep
+RUN apt install python3-colcon-common-extensions 
+# Initialize rosdep
+RUN rosdep init && rosdep update
+
+# Setup scripts
+RUN echo "source /opt/ros/${ROS_DISTRO_ARG}/setup.bash" >> /root/.bashrc
+
+# Set the entry point
+COPY ./ros_entrypoint.sh /
+RUN chmod +x /ros_entrypoint.sh
+
+#ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+#ref: https://gist.github.com/GowriUmesh/ae5da412b78bbdf58c2d2090ceba32e9#file-build-ros-desktop-image-sh

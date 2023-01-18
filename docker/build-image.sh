@@ -7,7 +7,7 @@ ROS_DISTRO_ARG="humble"
 
 #TAG="ros2 ${ROS_DISTRO_ARG} in cuda${CUDA_MAJOR}.${CUDA_MINOR}-ubuntu${UBUNTU_RELEASE_YEAR}.04"
 TAG="myros2${ROS_DISTRO_ARG}"
-DOCKERFILE="Dockerfile.ros2"
+DOCKERFILE="Dockerfile.ros2humble"
 
 echo "Building '${TAG}'" 
 
