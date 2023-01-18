@@ -1,0 +1,69 @@
+ARG BASE_IMAGE=myros2ubuntu22cuda117:latest
+FROM ${BASE_IMAGE}
+
+ARG UBUNTU_RELEASE_YEAR
+# ARG ZED_SDK_MAJOR
+# ARG ZED_SDK_MINOR
+ARG CUDA_MAJOR
+ARG CUDA_MINOR
+
+ARG ROS_DISTRO_ARG
+ENV LOGNAME root
+ENV ROS_DISTRO ${ROS_DISTRO_ARG}
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# install packages
+RUN apt-get update || true && apt-get install -q -y --no-install-recommends \
+    dirmngr \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# setup sources.list and keys
+RUN echo "deb http://packages.ros.org/ros2/ubuntu focal main" > /etc/apt/sources.list.d/ros2-latest.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# install bootstrap tools
+RUN apt-get update || true && apt-get install --no-install-recommends -y \
+    build-essential \
+    git \
+    python3-colcon-common-extensions \
+    python3-colcon-mixin \
+    python3-rosdep \
+    python3-vcstool \
+    && rm -rf /var/lib/apt/lists/*
+
+# bootstrap rosdep
+RUN rosdep init \
+    && rosdep update
+
+# setup colcon mixin and metadata
+RUN colcon mixin add default \
+    https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+    colcon mixin update && \
+    colcon metadata add default \
+    https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+    colcon metadata update
+
+# clone source
+ENV ROS2_WS /ros2_ws
+RUN mkdir -p $ROS2_WS/src
+WORKDIR $ROS2_WS
+
+# build source
+RUN colcon \
+    build \
+    --cmake-args \
+      -DSECURITY=ON --no-warn-unused-cli \
+    --symlink-install
+
+# setup bashrc
+RUN cp /etc/skel/.bashrc ~/
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+#ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+
+#ref: https://gist.github.com/GowriUmesh/ae5da412b78bbdf58c2d2090ceba32e9#file-build-ros-desktop-image-sh
