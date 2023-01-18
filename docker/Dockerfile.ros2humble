@@ -50,10 +50,8 @@ RUN apt install -y ros-${ROS_DISTRO_ARG}-desktop \
                 python3-argcomplete \
     && rm -rf /var/lib/apt/lists/*rm 
 
-RUN apt install python3-rosdep2 #add rosdep
-RUN apt install python3-colcon-common-extensions 
 # Initialize rosdep
-RUN rosdep init && rosdep update
+#RUN rosdep init && rosdep update
 
 # Setup scripts
 RUN echo "source /opt/ros/${ROS_DISTRO_ARG}/setup.bash" >> /root/.bashrc
