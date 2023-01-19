@@ -10,6 +10,27 @@ if you have already cloned the project without submodules, you can use
 git submodule init
 git submodule update
 ```
+Check the submodules with the right branch as shown in .gitmodules
+
+Build the container or install ROS2 environment, enter the container via scripts/runcontainerxxx.sh
+
+When you do the colon build, if you see the following error
+```bash
+--- stderr: isaac_ros_nitros
+/usr/bin/ld:/myROS2/src/isaac_ros_nitros/isaac_ros_nitros/gxf/lib/gxf_x86_64_cuda_11_7/core/libgxf_core.so: file format not recognized; treating as linker script
+``` 
+The solution is
+```bash
+admin@lkk-intel12:/myROS2/src/isaac_ros_nitros$ git lfs pull
+```
+
+If you see the error of "fatal error: pylon/PylonIncludes.h: No such file or directory", that means the pylon camera driver is not installed. Install the driver via
+```bash
+tar -zxvf pylon_7.2.0.25592_x86_64_debs.tar.gz
+sudo dpkg -i pylon_7.2.0.25592-deb0_amd64.deb
+export PYLON_ROOT=/opt/pylon
+echo "export PYLON_ROOT=/opt/pylon" >> ~/.bashrc
+```
 
 ## ROS2 Installation
 Follow [ROS2 Humble](https://docs.ros.org/en/humble/) instruction to install ROS2 humble to Ubuntu22.04 (not Ubuntu20.04 or other versions).
