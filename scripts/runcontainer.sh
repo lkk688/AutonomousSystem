@@ -2,7 +2,7 @@
 
 # Run container from image
 #IMAGE_ID="56e9b6fa7044"
-IMAGE_name="myros2:v1"
+IMAGE_name=$1 #"myros2:v1"
 PLATFORM="$(uname -m)"
 echo $PLATFORM
 

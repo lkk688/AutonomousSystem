@@ -26,8 +26,8 @@ admin@lkk-intel12:/myROS2/src/isaac_ros_nitros$ git lfs pull
 
 If you see the error of "fatal error: pylon/PylonIncludes.h: No such file or directory", that means the pylon camera driver is not installed. Install the driver via
 ```bash
-tar -zxvf pylon_7.2.0.25592_x86_64_debs.tar.gz
-sudo dpkg -i pylon_7.2.0.25592-deb0_amd64.deb
+/myROS2/tmp$ tar -xvf pylon_7.2.1.25747_x86_64_debs.tar
+/myROS2/tmp$ sudo dpkg -i pylon_7.2.1.25747-deb0_amd64.deb 
 export PYLON_ROOT=/opt/pylon
 echo "export PYLON_ROOT=/opt/pylon" >> ~/.bashrc
 ```
