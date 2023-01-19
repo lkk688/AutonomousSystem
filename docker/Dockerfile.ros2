@@ -1,3 +1,4 @@
+#build ros2 from source, not successful
 ARG BASE_IMAGE=myros2ubuntu22cuda117:latest
 FROM ${BASE_IMAGE}
 

@@ -2,7 +2,7 @@
 
 # Run container from image
 #IMAGE_ID="56e9b6fa7044"
-IMAGE_name="myros2humble:latest"
+IMAGE_name="myros2triton:latest"
 PLATFORM="$(uname -m)"
 echo $PLATFORM
 

@@ -1,5 +1,16 @@
 # myROS2
 
+## Clone this Repo
+Clone this repo:
+```bash
+git clone --recurse-submodules https://github.com/lkk688/myROS2.git
+```
+if you have already cloned the project without submodules, you can use
+```bash
+git submodule init
+git submodule update
+```
+
 ## ROS2 Installation
 Follow [ROS2 Humble](https://docs.ros.org/en/humble/) instruction to install ROS2 humble to Ubuntu22.04 (not Ubuntu20.04 or other versions).
 
