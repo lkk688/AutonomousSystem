@@ -58,3 +58,6 @@ log/
 /src/isaac_ros_common
 
 tmp/
+*.onnx
+*.pth
+*.pt
