@@ -23,6 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'YoloDecoder = yolopyinference_ros.YoloDecoder:main',
             'image_visualizer = yolopyinference_ros.visualization:main'
         ],
     },

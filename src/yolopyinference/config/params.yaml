@@ -1,0 +1,7 @@
+%YAML 1.2
+---
+model_repository_paths:
+  - '/myROS2/tmp'
+model_name: 'yolov5'
+
+# post filtering parameters
