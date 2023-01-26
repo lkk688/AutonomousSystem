@@ -18,11 +18,11 @@ def generate_launch_description():
     launch_args = [
         DeclareLaunchArgument(
             'network_image_width',
-            default_value='960',
+            default_value='640',#960
             description='The input image width that the network expects'),
         DeclareLaunchArgument(
             'network_image_height',
-            default_value='544',
+            default_value='640',#544
             description='The input image height that the network expects'),
         DeclareLaunchArgument(
             'encoder_image_mean',
@@ -34,11 +34,11 @@ def generate_launch_description():
             description='The standard deviation for image normalization'),
         DeclareLaunchArgument(
             'model_file_path',
-            default_value='',
+            default_value='/myROS2/tmp/yolov5s.onnx',
             description='The absolute file path to the ONNX file'),
         DeclareLaunchArgument(
             'engine_file_path',
-            default_value='',
+            default_value='/myROS2/tmp/yolov5s.plan',
             description='The absolute file path to the TensorRT engine file'),
         DeclareLaunchArgument(
             'input_tensor_names',
@@ -46,7 +46,7 @@ def generate_launch_description():
             description='A list of tensor names to bound to the specified input binding names'),
         DeclareLaunchArgument(
             'input_binding_names',
-            default_value='["input_1"]',
+            default_value='["images"]', #'["input_1"]'
             description='A list of input tensor binding names (specified by model)'),
         DeclareLaunchArgument(
             'input_tensor_formats',
@@ -58,7 +58,7 @@ def generate_launch_description():
             description='A list of tensor names to bound to the specified output binding names'),
         DeclareLaunchArgument(
             'output_binding_names',
-            default_value='["softmax_1"]',
+            default_value='["output0"]', #'["softmax_1"]'
             description='A  list of output tensor binding names (specified by model)'),
         DeclareLaunchArgument(
             'output_tensor_formats',

@@ -11,20 +11,19 @@ from vision_msgs.msg import Detection2D
 from vision_msgs.msg import Detection2DArray
 from vision_msgs.msg import ObjectHypothesisWithPose
 from pathlib import Path
-
-
-def tensor_to_torch_array(tensor):
-    shape = tuple(tensor.shape.dims)
-    x = None
-    if tensor.data_type == 9:  # float32
-        x = torch.frombuffer(bytearray(tensor.data), dtype=torch.float32)
-    elif tensor.data_type == 10:  # float64
-        x = torch.frombuffer(bytearray(tensor.data), dtype=torch.float64)
-    else:
-        print('Received tensor of incorrect type:', tensor.data_type)
-        return None
-    x = torch.reshape(x, shape)
-    return x
+from yolopyinference_ros.DecoderUtils import tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
+# def tensor_to_torch_array(tensor):
+#     shape = tuple(tensor.shape.dims)
+#     x = None
+#     if tensor.data_type == 9:  # float32
+#         x = torch.frombuffer(bytearray(tensor.data), dtype=torch.float32)
+#     elif tensor.data_type == 10:  # float64
+#         x = torch.frombuffer(bytearray(tensor.data), dtype=torch.float64)
+#     else:
+#         print('Received tensor of incorrect type:', tensor.data_type)
+#         return None
+#     x = torch.reshape(x, shape)
+#     return x
 
 def decode(pred, params_config):
     # Convert Isaac ROS tensors to torch arrays
@@ -38,9 +37,9 @@ def decode(pred, params_config):
     agnostic_nms = False
     device = ''
     
-    # device = select_device(device)
+    device = select_device(device)
 
-    # pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+    pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
     # pred = [cx, cy, w, h, conf, pred_cls(80)]
     
     detections_arr = Detection2DArray()
@@ -51,12 +50,12 @@ def decode(pred, params_config):
             #(640, 640) is input dimensions expected by YOLOv5s network
             shape = torch.Size([640, 640])
             #(1280, 720) is image size from RealSense camera
-            #det[:, :4] = scale_boxes(shape, det[:, :4], (720, 1280, 3))
+            det[:, :4] = scale_boxes(shape, det[:, :4], (720, 1280, 3))
 
             
             for *xyxy, conf, cls in det:
-                #xywh = xyxy2xywh(torch.tensor(xyxy).view(1, 4)).view(-1)
-                xywh = xyxy
+                xywh = xyxy2xywh(torch.tensor(xyxy).view(1, 4)).view(-1)
+                #xywh = xyxy
     
                 obj = Detection2D()
                 obj.bbox.size_x = float(xywh[2])

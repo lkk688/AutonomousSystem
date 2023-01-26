@@ -7,7 +7,7 @@
                         {
                                     "name": "ROS: Launch",
                                     "request": "launch",
-                                    "target": "/mnt/d/Developer/myROS2/install/cpp_parameters/share/cpp_parameters/launch/cpp_parameters_launch.py",
+                                    "target": "/myROS2/install/yolopyinference_ros/share/yolopyinference_ros/yolotensorrtlaunch.py",
                                     "launch": [
                                                 "rviz",
                                                 "gz",
@@ -18,3 +18,4 @@
                         }
             ]
 }
+//"target": "/mnt/d/Developer/myROS2/install/cpp_parameters/share/cpp_parameters/launch/cpp_parameters_launch.py",
