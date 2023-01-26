@@ -41,21 +41,23 @@ def decode(pred, params_config):
 
     pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
     # pred = [cx, cy, w, h, conf, pred_cls(80)]
-    
     detections_arr = Detection2DArray()
 
 
     for i, det in enumerate(pred):
+        #print(len(det))
         if len(det):
             #(640, 640) is input dimensions expected by YOLOv5s network
             shape = torch.Size([640, 640])
             #(1280, 720) is image size from RealSense camera
+            #print(det[:, :4])
             det[:, :4] = scale_boxes(shape, det[:, :4], (720, 1280, 3))
 
             
             for *xyxy, conf, cls in det:
                 xywh = xyxy2xywh(torch.tensor(xyxy).view(1, 4)).view(-1)
                 #xywh = xyxy
+                print(xywh)
     
                 obj = Detection2D()
                 obj.bbox.size_x = float(xywh[2])

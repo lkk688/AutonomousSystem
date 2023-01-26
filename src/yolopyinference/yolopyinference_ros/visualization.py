@@ -41,7 +41,7 @@ class ImageVisualizer(Node):
     def detections_callback(self, detections_msg, img_msg):
         txt_color=(255, 0, 255)
         cv2_img = self._bridge.imgmsg_to_cv2(img_msg)
-        print(cv2_img.shape)#(720, 1280, 3) from realsense
+        #print(cv2_img.shape)#(720, 1280, 3) from realsense
         for detection in detections_msg.detections:
             center_x = detection.bbox.center.position.x
             center_y = detection.bbox.center.position.y
