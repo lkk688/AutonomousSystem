@@ -151,11 +151,20 @@ RUN mkdir $HOME/opt && cd $HOME/opt \
     && mv $HOME/opt/openssl-1.1.1o/libssl.so.1.1 $HOME/opt/lib/
     #&& make test
 
-#install text editor
-RUN apt-get update && apt-get -y install nano
+# Install linux packages
+RUN apt update && apt install --no-install-recommends -y nano usbutils gdb zip htop screen libgl1-mesa-glx
+#RUN apt-get update && apt-get -y install nano usbutils gdb
 
 #install pytorch for cuda11.7
+RUN python -m pip install --upgrade pip wheel
 RUN pip3 install torch torchvision torchaudio
+RUN pip3 install --no-cache jupyterlab ultralytics albumentations comet gsutil notebook 'opencv-python<4.6.0.66'
+# Downloads to user config dir
+ADD https://ultralytics.com/assets/Arial.ttf https://ultralytics.com/assets/Arial.Unicode.ttf /root/.config/Ultralytics/
+
+# Install pip packages
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
 
 RUN echo "export LD_LIBRARY_PATH=$HOME/opt/lib:$LD_LIBRARY_PATH" >> $HOME/.bashrc
 

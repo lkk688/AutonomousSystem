@@ -11,7 +11,7 @@ from vision_msgs.msg import Detection2D
 from vision_msgs.msg import Detection2DArray
 from vision_msgs.msg import ObjectHypothesisWithPose
 from pathlib import Path
-from yolopyinference_ros.DecoderUtils import tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
+from yolopyinference_ros.YoloUtils import tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
 # def tensor_to_torch_array(tensor):
 #     shape = tuple(tensor.shape.dims)
 #     x = None

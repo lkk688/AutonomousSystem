@@ -61,3 +61,6 @@ tmp/
 *.onnx
 *.pth
 *.pt
+*.engine
+*.pb
+*.torchscript

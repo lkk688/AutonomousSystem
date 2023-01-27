@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+trtdetect_node:
+  ros__parameters:
+    weights: "tmp/yolov5s.engine"
+    source: "tmp/bus.jpg"
+    imgsz: [640, 640]
+    conf_thres: 0.25 # confidence threshold
+    iou_thres: 0.45  # NMS IOU threshold
+    max_det: 1000  # maximum detections per image
+    device: '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    view_img: False  # show results
+    save_txt: False  # save results to *.txt
+    nosave: False  # do not save images/videos
+    classes: []  # filter by class: --class 0, or --class 0 2 3
+    agnostic_nms: False  # class-agnostic NMS
+    augment: False  # augmented inference
+    visualize: False  # visualize features
+    project: 'tmp/'  # save results to project/name
+    name: 'exp'  # save results to project/name
+    half: False  # use FP16 half-precision inference
+    vid_stride: 1  # video frame-rate stride

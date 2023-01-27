@@ -471,6 +471,7 @@ Use VSCode command to run a ros node or launch file:
 
 In the VSCode terminal, open ROS2 daemon:
 ```bash
+ros2 daemon stop
 ros2 daemon start
 ros2 daemon status
 ```
