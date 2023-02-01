@@ -20,6 +20,9 @@ from vision_msgs.msg import Detection2D
 from vision_msgs.msg import Detection2DArray
 from vision_msgs.msg import ObjectHypothesisWithPose
 from pathlib import Path
+from yolopyinference_ros.YoloUtils import yaml_load
+#, tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
+
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]
@@ -110,6 +113,14 @@ class TRTBackend(nn.Module):
         batch_size = bindings['images'].shape[0]  # if dynamic, this is instead max batch size
         #return dynamic, bindings
 
+        # class names
+        if 'names' not in locals():
+            names = yaml_load(data)['names'] if data else {i: f'class{i}' for i in range(999)}
+        if names[0] == 'n01440764' and len(names) == 1000:  # ImageNet
+            names = yaml_load(ROOT / 'data/ImageNet.yaml')['names']  # human-readable names
+
+        self.__dict__.update(locals())  # assign all variables to self
+
     def forward(self, im, augment=False, visualize=False):
         b, ch, h, w = im.shape  # batch, channel, height, width
         if self.fp16 and im.dtype != torch.float16:
@@ -136,6 +147,36 @@ class TRTBackend(nn.Module):
     def from_numpy(self, x):
         return torch.from_numpy(x).to(self.device) if isinstance(x, np.ndarray) else x
 
+    def warmup(self, imgsz=(1, 3, 640, 640)):
+        # Warmup model by running inference once
+        #warmup_types = self.pt, self.jit, self.onnx, self.engine, self.saved_model, self.pb, self.triton
+        if (self.device.type != 'cpu'):
+            im = torch.empty(*imgsz, dtype=torch.half if self.fp16 else torch.float, device=self.device)  # input
+            for _ in range(2 if self.jit else 1):  #
+                self.forward(im)  # warmup
+    
+    # @staticmethod
+    # def _model_type(p='path/to/model.pt'):
+    #     # Return model type from model path, i.e. path='path/to/model.onnx' -> type=onnx
+    #     # types = [pt, jit, onnx, xml, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle]
+    #     from export import export_formats
+    #     from utils.downloads import is_url
+    #     sf = list(export_formats().Suffix)  # export suffixes
+    #     if not is_url(p, check=False):
+    #         check_suffix(p, sf)  # checks
+    #     url = urlparse(p)  # if url may be Triton inference server
+    #     types = [s in Path(p).name for s in sf]
+    #     types[8] &= not types[9]  # tflite &= not edgetpu
+    #     triton = not any(types) and all([any(s in url.scheme for s in ["http", "grpc"]), url.netloc])
+    #     return types + [triton]
+
+    @staticmethod
+    def _load_metadata(f=Path('path/to/meta.yaml')):
+        # Load metadata from meta.yaml if it exists
+        if f.exists():
+            d = yaml_load(f)
+            return d['stride'], d['names']  # assign stride, names
+        return None, None
     
 
 # def main(opt):
@@ -174,8 +215,8 @@ class TRTBackend(nn.Module):
 #         vid_stride=1,  # video frame-rate stride
 @smart_inference_mode()
 def trtdetectfun(paramdict):
-    source = str(source)
-    save_img = not nosave and not source.endswith('.txt')  # save inference images
+    source = str(paramdict.source)
+    save_img = not paramdict.nosave and not source.endswith('.txt')  # save inference images
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
     is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
     webcam = source.isnumeric() or source.endswith('.streams') or (is_url and not is_file)
@@ -184,8 +225,8 @@ def trtdetectfun(paramdict):
     #     source = check_file(source)  # download
 
     # Directories
-    save_dir = Path(project) / name #increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-    (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    save_dir = Path(paramdict.project) / paramdict.name #increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+    (save_dir / 'labels' if paramdict.save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     if torch.cuda.is_available():
         print(torch.cuda.device_count())
@@ -193,7 +234,7 @@ def trtdetectfun(paramdict):
     else:
         device=torch.device('cpu')
     
-    # model = TRTBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
+    model = TRTBackend(paramdict.weights, device=device, dnn=False, data=paramdict.data, fp16=paramdict.half)
     # stride, names, pt = model.stride, model.names, model.pt
 
     # # Dataloader
