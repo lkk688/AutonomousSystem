@@ -2,8 +2,9 @@
 ---
 trtdetect_node:
   ros__parameters:
-    weights: "tmp/yolov5s.engine"
+    weights: "dlmodels/YOLOv5/yolov5s.engine"
     source: "tmp/bus.jpg"
+    data: "tmp/coco128.yaml"
     imgsz: [640, 640]
     conf_thres: 0.25 # confidence threshold
     iou_thres: 0.45  # NMS IOU threshold

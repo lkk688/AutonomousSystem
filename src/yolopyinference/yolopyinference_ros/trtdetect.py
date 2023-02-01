@@ -20,7 +20,7 @@ from vision_msgs.msg import Detection2D
 from vision_msgs.msg import Detection2DArray
 from vision_msgs.msg import ObjectHypothesisWithPose
 from pathlib import Path
-from yolopyinference_ros.YoloUtils import yaml_load
+from yolopyinference_ros.YoloUtils import yaml_load, check_img_size, letterbox, increment_path, non_max_suppression, scale_boxes, xyxy2xywh
 #, tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
 
 
@@ -152,8 +152,8 @@ class TRTBackend(nn.Module):
         #warmup_types = self.pt, self.jit, self.onnx, self.engine, self.saved_model, self.pb, self.triton
         if (self.device.type != 'cpu'):
             im = torch.empty(*imgsz, dtype=torch.half if self.fp16 else torch.float, device=self.device)  # input
-            for _ in range(2 if self.jit else 1):  #
-                self.forward(im)  # warmup
+            #for _ in range(2 if self.jit else 1):  #
+            self.forward(im)  # warmup
     
     # @staticmethod
     # def _model_type(p='path/to/model.pt'):
@@ -213,10 +213,27 @@ class TRTBackend(nn.Module):
 #         half=False,  # use FP16 half-precision inference
 #         #dnn=False,  # use OpenCV DNN for ONNX inference
 #         vid_stride=1,  # video frame-rate stride
-@smart_inference_mode()
-def trtdetectfun(paramdict):
-    source = str(paramdict.source)
-    save_img = not paramdict.nosave and not source.endswith('.txt')  # save inference images
+#@smart_inference_mode()
+def detectfun(paramdict):
+    weights = paramdict['weights']
+    source = paramdict['source'] #str(paramdict.source)
+    data = paramdict['data']
+    imgsz = paramdict['imgsz']
+    conf_thres = paramdict['conf_thres']
+    iou_thres = paramdict['iou_thres']
+    max_det = paramdict['max_det']
+    device = paramdict['device']
+    nosave = paramdict['nosave']
+    classes = paramdict['classes']
+    agnostic_nms = paramdict['agnostic_nms']
+    visualize = paramdict['visualize']
+    project = paramdict['project']
+    name = paramdict['name']
+    save_txt = paramdict['save_txt']
+    
+    half = paramdict['half']
+
+    save_img = not nosave and not source.endswith('.txt')  # save inference images
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
     is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
     webcam = source.isnumeric() or source.endswith('.streams') or (is_url and not is_file)
@@ -225,8 +242,8 @@ def trtdetectfun(paramdict):
     #     source = check_file(source)  # download
 
     # Directories
-    save_dir = Path(paramdict.project) / paramdict.name #increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-    (save_dir / 'labels' if paramdict.save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    save_dir = Path(project) / name #increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+    (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     if torch.cuda.is_available():
         print(torch.cuda.device_count())
@@ -234,36 +251,75 @@ def trtdetectfun(paramdict):
     else:
         device=torch.device('cpu')
     
-    model = TRTBackend(paramdict.weights, device=device, dnn=False, data=paramdict.data, fp16=paramdict.half)
-    # stride, names, pt = model.stride, model.names, model.pt
+    model = TRTBackend(weights, device=device, dnn=False, data=data, fp16=half)
+    stride, names= model.stride, model.names
+    imgsz = check_img_size(imgsz, s=stride)  # check image size
+
+    # Run inference
+    model.warmup(imgsz=(1, 3, *imgsz))  # warmup
+
+    #dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
 
     # # Dataloader
-    # bs = 1  # batch_size
-    # im0 = cv2.imread(path)  # BGR
-    # img_size=640
-    # stride=32
-    # auto=True
-    # im = letterbox(im0, img_size, stride=stride, auto=auto)[0]  # padded resize
-    # im = im.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
-    # im = np.ascontiguousarray(im)  # contiguous
+    bs = 1  # batch_size
+    im0 = cv2.imread(source)  # BGR
+    img_size=640
+    stride=32
+    auto=False #True
+    im = letterbox(im0, img_size, stride=stride, auto=auto)[0]  # padded resize
+    im = im.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
+    im = np.ascontiguousarray(im)  # contiguous
 
-    # im = torch.from_numpy(im).to(model.device)
-    # im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
-    # im /= 255  # 0 - 255 to 0.0 - 1.0
-    # if len(im.shape) == 3:
-    #     im = im[None]  # expand for batch dim
+    im = torch.from_numpy(im).to(model.device)
+    im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
+    im /= 255  # 0 - 255 to 0.0 - 1.0
+    if len(im.shape) == 3:
+        im = im[None]  # expand for batch dim
 
-    # # Run inference
-    # model.warmup(imgsz=(1 if pt or model.triton else bs, 3, *imgsz))  # warmup
-    # pred = model(im, augment=augment, visualize=visualize)
-    #pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+    # Run inference
+    visualize = increment_path(save_dir / Path(source).stem, mkdir=True) if visualize else False
+    pred = model(im, augment=False, visualize=visualize)
 
+    pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+
+    # pred = [cx, cy, w, h, conf, pred_cls(80)]
+    detections_arr = Detection2DArray()
+
+    # Process predictions
+    for i, det in enumerate(pred):  # per image
+        if len(det):
+            # Rescale boxes from img_size to im0 size
+            det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
+
+            for *xyxy, conf, cls in det:
+                xywh = xyxy2xywh(torch.tensor(xyxy).view(1, 4)).view(-1)
+                #xywh = xyxy
+                print(xywh)
+    
+                obj = Detection2D()
+                obj.bbox.size_x = float(xywh[2])
+                obj.bbox.size_y = float(xywh[3])
+                obj.bbox.center.position.x = float(xywh[0])
+                obj.bbox.center.position.y = float(xywh[1])
+                obj.id = str(int(cls))
+                hyp = ObjectHypothesisWithPose()
+                hyp.hypothesis.class_id = str(int(cls))
+                hyp.hypothesis.score = float(conf)
+                obj.results.append(hyp)
+                detections_arr.detections.append(obj)
+
+            # Print results
+            for c in det[:, 5].unique():
+                n = (det[:, 5] == c).sum()  # detections per class
+                s = f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
+
+    return detections_arr
 
 
 class TRTDetectNode(Node):
     def __init__(self, name='trtdetect_node'):
         super().__init__(name)
-        param_names = ['weights', 'source', 'imgsz', 'conf_thres', 'iou_thres', 'max_det', \
+        param_names = ['weights', 'source', 'data', 'imgsz', 'conf_thres', 'iou_thres', 'max_det', \
             'device', 'view_img', 'save_txt', 'nosave', 'classes', 'agnostic_nms', 'augment', \
                 'visualize', 'project', 'name', 'half', 'vid_stride']
         self.params_config = {}
@@ -294,7 +350,7 @@ class TRTDetectNode(Node):
         
         #Detection function
         print(self.params_config)
-        detections = trtdetectfun(self.params_config)
+        detections = detectfun(self.params_config)
 
         # Publish the message to the topic
         self.publisher_.publish(detections)
@@ -305,6 +361,8 @@ def main(args=None):
         rclpy.init(args=args)
         node = TRTDetectNode('trtdetect_node')
         rclpy.spin(node)
+    except Exception as e: 
+        print(e)
     except KeyboardInterrupt:
         pass
     finally:
