@@ -5,13 +5,13 @@ from rclpy.duration import Duration
 from rclpy.node import Node
 from scipy import special
 import torch
-from visualization_msgs.msg import Marker, MarkerArray
+#from visualization_msgs.msg import Marker, MarkerArray
 from std_msgs.msg import String
 from vision_msgs.msg import Detection2D
 from vision_msgs.msg import Detection2DArray
 from vision_msgs.msg import ObjectHypothesisWithPose
 from pathlib import Path
-from yolopyinference_ros.YoloUtils import tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
+from build.yolopyinference_ros.yolopyinference_ros.utils.YoloUtils import tensor_to_torch_array, select_device, non_max_suppression, scale_boxes, xyxy2xywh
 # def tensor_to_torch_array(tensor):
 #     shape = tuple(tensor.shape.dims)
 #     x = None
