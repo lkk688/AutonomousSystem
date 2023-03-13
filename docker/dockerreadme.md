@@ -32,9 +32,10 @@ sudo xhost +si:localuser:root
 after you 
 Re-enter a container: use the command "docker exec -it container_id /bin/bash" to get a bash shell in the container.
 
-Stop a running container: docker stop container_id
-Stop all containers not running: docker container prune
-Delete docker images: docker image rm dockerimageid
+Popular Docker commands:
+ * Stop a running container: docker stop container_id
+ * Stop all containers not running: docker container prune
+ * Delete docker images: docker image rm dockerimageid
 
 ## Container Installation
 Check the Docker section for detailed information.
