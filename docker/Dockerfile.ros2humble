@@ -167,6 +167,11 @@ ADD https://ultralytics.com/assets/Arial.ttf https://ultralytics.com/assets/Aria
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
+#Fix the Mayavi problem
+RUN pip3 install --upgrade pyside2
+RUN pip3 uninstall opencv-python -y
+RUN pip3 install opencv-python-headless
+
 RUN echo "export LD_LIBRARY_PATH=$HOME/opt/lib:$LD_LIBRARY_PATH" >> $HOME/.bashrc
 
 # Setup scripts
