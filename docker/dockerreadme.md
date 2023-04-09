@@ -7,6 +7,10 @@ Option2: Ubuntu22.04 based on nvidia/cuda:11.7.1-devel-ubuntu22.04, you can buil
 
  Option2 version needs additional steps to prevent build error in isaac_ros_nitros (error: ‘unique_lock’ is not a member of ‘std’). Follow the changes [here](https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nitros/pull/8/commits/0e243982f6a6c69ef896b4c621f422d170760825) 
 
+After the docker container image is built, run the follow script to start the container
+```bash
+./scripts/runcontainer.sh myros2humble:latest
+```
 ## Docker
 Install [Docker](https://docs.docker.com/engine/install/ubuntu/) and follow [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
 

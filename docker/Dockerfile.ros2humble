@@ -31,7 +31,8 @@ RUN locale-gen en_US en_US.UTF-8 \
 
 RUN add-apt-repository universe
 
-RUN apt update && sudo apt install curl
+RUN apt update 
+# && sudo apt install curl
 
 # Add key
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
