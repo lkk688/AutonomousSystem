@@ -5,7 +5,7 @@
 [submodule "src/ros_tutorials"]
 	path = src/ros_tutorials
 	url = https://github.com/ros/ros_tutorials.git
-	branch = humble-devel
+	branch = humble
 [submodule "src/velodyne"]
 	path = src/velodyne
 	url = https://github.com/ros-drivers/velodyne.git
