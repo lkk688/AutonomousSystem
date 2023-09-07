@@ -12,7 +12,7 @@ if you have already cloned the project without submodules, you can use
 git submodule init
 git submodule update --remote
 ```
-Check the submodules with the right branch as shown in .gitmodules
+Check the submodules with the right branch as shown in .gitmodules 
 
 Build the container or install ROS2 environment, enter the container via scripts/runcontainerxxx.sh
 
