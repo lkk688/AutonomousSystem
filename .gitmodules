@@ -20,7 +20,6 @@
 [submodule "src/isaac_ros_nitros"]
 	path = src/isaac_ros_nitros
 	url = https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nitros
-	branch = main
 [submodule "src/isaac_ros_dnn_inference"]
 	path = src/isaac_ros_dnn_inference
 	url = https://github.com/lkk688/isaac_ros_dnn_inference.git
