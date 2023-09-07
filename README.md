@@ -3,12 +3,14 @@
 ## Clone this Repo
 Clone this repo:
 ```bash
-git clone --recurse-submodules https://github.com/lkk688/myROS2.git
+git clone --recurse-submodules https://github.com/lkk688/myROS2.git --remote
 ```
+The "--remote" option ensures that it will not use the superproject's recorded SHA-1 to update the submodule, but will use the status of the submodule's remote-tracking branch instead. That would avoid the "did not contain xxx" error message.
+
 if you have already cloned the project without submodules, you can use
 ```bash
 git submodule init
-git submodule update
+git submodule update --remote
 ```
 Check the submodules with the right branch as shown in .gitmodules
 
